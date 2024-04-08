@@ -15,7 +15,7 @@ import {locale as frLang} from './modules/i18n/vocabs/fr';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent  {
   constructor(private translationService: TranslationService) {
     // register translations
     this.translationService.loadTranslations(
@@ -28,5 +28,4 @@ export class AppComponent implements OnInit {
     );
   }
 
-  ngOnInit() {}
 }
