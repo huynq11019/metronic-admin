@@ -5,7 +5,6 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "strictPropertyInitialization": false,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
@@ -17,6 +16,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2017",
+    "strict": false,
+    "noPropertyAccessFromIndexSignature": false,
     "module": "es2020",
     "lib": [
       "es2018",
@@ -27,6 +28,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": false
   }
 }

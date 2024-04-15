@@ -39,7 +39,7 @@ export class ForgotPasswordComponent implements OnInit {
   initForm() {
     this.forgotPasswordForm = this.fb.group({
       email: [
-        'admin@demo.com',
+        'huynq1808@gmail.com',
         Validators.compose([
           Validators.required,
           Validators.email,
@@ -50,13 +50,16 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  submit() {
+  submit(): void {
     this.errorState = ErrorStates.NotSubmitted;
     const forgotPasswordSubscr = this.authService
       .forgotPassword(this.f.email.value)
       .pipe(first())
       .subscribe((result: boolean) => {
         this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
+        if (result) {
+          confirm('Please check your email');
+        }
       });
     this.unsubscribe.push(forgotPasswordSubscr);
   }

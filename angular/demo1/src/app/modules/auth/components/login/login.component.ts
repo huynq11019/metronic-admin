@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription, Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { UserModel } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Observable, Subscription} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {UserModel} from '../../models/user.model';
+import {AuthService} from '../../services/auth.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import firebase from 'firebase';
+import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 
 @Component({
   selector: 'app-login',
@@ -14,8 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LoginComponent implements OnInit, OnDestroy {
   // KeenThemes mock, change it to:
   defaultAuth: any = {
-    email: 'admin@demo.com',
-    password: 'demo',
+    email: 'huynq1808@gmail.com',
+    password: 'Huynq1808@',
   };
   loginForm: FormGroup;
   hasError: boolean;
@@ -42,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.initForm();
     // get return url from route parameters or default to '/'
     this.returnUrl =
-      this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
+      this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   // convenience getter for easy access to form fields
@@ -50,7 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.loginForm.controls;
   }
 
-  initForm() {
+  initForm(): void {
     this.loginForm = this.fb.group({
       email: [
         this.defaultAuth.email,
@@ -72,7 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  submit() {
+  submit(): void {
     this.hasError = false;
     const loginSubscr = this.authService
       .login(this.f.email.value, this.f.password.value)
@@ -85,6 +87,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       });
     this.unsubscribe.push(loginSubscr);
+  }
+
+  oauthGoogleLogin(): void {
+    this.authService.oauthPopup(new GoogleAuthProvider())
+      .pipe(first())
+      .subscribe((user: UserModel | undefined) => {
+        if (user) {
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.hasError = true;
+        }
+      });
   }
 
   ngOnDestroy() {

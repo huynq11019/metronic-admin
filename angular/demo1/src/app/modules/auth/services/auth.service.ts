@@ -1,11 +1,14 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
-import { map, catchError, switchMap, finalize } from 'rxjs/operators';
-import { UserModel } from '../models/user.model';
-import { AuthModel } from '../models/auth.model';
-import { AuthHTTPService } from './auth-http';
-import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject, EMPTY, Observable, of, Subscription, throwError} from 'rxjs';
+import {catchError, finalize, map, switchMap, take, tap} from 'rxjs/operators';
+import {IUserModel, UserModel} from '../models/user.model';
+import {AuthModel} from '../models/auth.model';
+import {AuthHTTPService} from './auth-http';
+import {environment} from 'src/environments/environment';
+import {Router} from '@angular/router';
+import {AngularFireAuth} from "@angular/fire/auth";
+import {AngularFirestore} from '@angular/fire/firestore';
+import {fromPromise} from "rxjs/internal-compatibility";
 
 export type UserType = UserModel | undefined;
 
@@ -24,6 +27,7 @@ export class AuthService implements OnDestroy {
   isLoadingSubject: BehaviorSubject<boolean>;
 
   get currentUserValue(): UserType {
+    console.log('currentUserSubject', this.currentUserSubject.value)
     return this.currentUserSubject.value;
   }
 
@@ -33,7 +37,9 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private authHttpService: AuthHTTPService,
-    private router: Router
+    private router: Router,
+    public afs: AngularFirestore, // Inject Firestore service
+    public afAuth: AngularFireAuth, // Inject Firebase auth service
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserType>(undefined);
@@ -44,51 +50,172 @@ export class AuthService implements OnDestroy {
   }
 
   // public methods
+  /**
+   * @description Log in
+   * @param email
+   * @param password
+   */
   login(email: string, password: string): Observable<UserType> {
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password).pipe(
-      map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
+    // this.isLoadingSubject.next(true);
+    // return this.authHttpService.login(email, password).pipe(
+    //   map((auth: AuthModel) => {
+    //     const result = this.setAuthFromLocalStorage(auth);
+    //     return result;
+    //   }),
+    //   switchMap(() => this.getUserByToken()),
+    //   catchError((err) => {
+    //     console.error('err', err);
+    //     return of(undefined);
+    //   }),
+    //   finalize(() => this.isLoadingSubject.next(false))
+    // );
+    return fromPromise(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
+      switchMap((userCredential) => {
+        if (!userCredential.user) {
+          console.warn('userCredential fail', userCredential)
+          return EMPTY
+        }
+
+        return this.getUserByToken();
       }),
-      switchMap(() => this.getUserByToken()),
+
       catchError((err) => {
-        console.error('err', err);
+        console.log('err', err)
         return of(undefined);
       }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
+      finalize(() => this.isLoadingSubject.next(false)))
+      .pipe(tap(res => {
+        console.log('authResponse ', res);
+
+      }))
+
   }
 
-  logout() {
-    localStorage.removeItem(this.authLocalStorageToken);
-    this.router.navigate(['/auth/login'], {
-      queryParams: {},
-    });
+  /**
+   * @description OAuth login
+   * @param provider
+   */
+  oauthPopup(provider: firebase.auth.AuthProvider): Observable<UserType> {
+    return fromPromise(this.afAuth.signInWithPopup(provider))
+      .pipe(switchMap((userCredential) => {
+        debugger
+          console.log('userCredential', userCredential)
+          if (!userCredential.user) {
+            console.warn('userCredential fail', userCredential)
+            return EMPTY
+          }
+
+          return this.getCurrentUser().pipe(
+            // create user if not existed
+            switchMap((user) => {
+
+              if (!user) {
+                const userCreate: IUserModel = {
+                  id: userCredential.user?.uid ?? '',
+                  username: userCredential.user?.email ?? '',
+                  password: '',
+                  fullname: userCredential.user?.displayName ?? '',
+                  email: userCredential.user?.email ?? '',
+                  pic: userCredential.user?.photoURL ?? './assets/media/users/default.jpg',
+                  roles: [],
+                  occupation: '',
+                  firstname: '',
+                  lastname: '',
+                  website: '',
+                  language: '',
+                  // get timezone from browser
+                  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone ?? '',
+                  communication: {
+                    email: false,
+                    sms: false,
+                    phone: false,
+                  }
+                }
+                return this.createUser(userCreate).pipe(
+                  tap((res) => {
+                      console.log('createUser', res)
+                    }
+                  ))
+
+              }
+              return of(user);
+            })
+          );
+        }),
+        catchError((err) => {
+          console.log('err', err)
+          return of(undefined);
+        }),
+        tap((res: any) => {
+          console.log('authResponse ', res);
+          if (!res) {
+            this.logout();
+          } else {
+            this.currentUserSubject.next(res);
+          }
+        }),
+        finalize(() => this.isLoadingSubject.next(false)))
   }
 
+  /**
+   * @description Log out
+   */
+  logout(): void {
+    this.afAuth.signOut()
+      .then(() => {
+        localStorage.removeItem(this.authLocalStorageToken);
+        this.router.navigate(['/auth/login'], {
+          queryParams: {},
+        }).then();
+      })
+
+  }
+
+  /**
+   * @description Get user by token
+   */
   getUserByToken(): Observable<UserType> {
-    const auth = this.getAuthFromLocalStorage();
-    if (!auth || !auth.authToken) {
-      return of(undefined);
-    }
 
     this.isLoadingSubject.next(true);
-    return this.authHttpService.getUserByToken(auth.authToken).pipe(
-      map((user: UserType) => {
+    return this.getCurrentUser().pipe(
+      tap(user => {
+        console.log('user', user);
         if (user) {
           this.currentUserSubject.next(user);
         } else {
           this.logout();
         }
-        return user;
       }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+
+  }
+
+  /**
+   * @description Get current user
+   * @private
+   */
+  private getCurrentUser(): Observable<UserModel | undefined> {
+    return this.afAuth.authState.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
+        return this.afs.collection('users').doc(user.uid).get().pipe(map((user) => {
+          return user.data() as UserModel;
+        }))
+      }),
+      catchError((err) => {
+        console.error('get user in store error', err);
+        return of(undefined);
+      }),
+      take(1),
       finalize(() => this.isLoadingSubject.next(false))
     );
   }
 
   // need create new user then login
-  registration(user: UserModel): Observable<any> {
+  registration(user: IUserModel): Observable<any> {
     this.isLoadingSubject.next(true);
     return this.authHttpService.createUser(user).pipe(
       map(() => {
@@ -103,11 +230,22 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  /**
+   * @description Forgot password
+   * @param email
+   */
+
   forgotPassword(email: string): Observable<boolean> {
     this.isLoadingSubject.next(true);
-    return this.authHttpService
-      .forgotPassword(email)
-      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+    return fromPromise(this.afAuth.sendPasswordResetEmail(email)).pipe(
+      map(() => true),
+      catchError(() =>
+        of(false)
+      ),
+      finalize(() => this.isLoadingSubject.next(false)));
+    // return this.authHttpService
+    //   .forgotPassword(email)
+    //   .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   // private methods
@@ -133,6 +271,19 @@ export class AuthService implements OnDestroy {
       console.error(error);
       return undefined;
     }
+  }
+
+  // create user in firestore
+  createUser(user: IUserModel): Observable<IUserModel> {
+    if (!user.id) {
+      return EMPTY;
+    }
+    return fromPromise(this.afs.collection('users').doc(user.id).set(user))
+      .pipe(map((res) => {
+        console.log('res', res)
+        return user;
+      }),
+        take(1));
   }
 
   ngOnDestroy() {

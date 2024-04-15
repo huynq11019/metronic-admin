@@ -18,6 +18,7 @@ import {AngularFireModule} from "@angular/fire";
 import {AngularFireAuthModule} from "@angular/fire/auth";
 import {AngularFireAuthGuardModule} from "@angular/fire/auth-guard";
 import {AngularFireStorageModule} from "@angular/fire/storage";
+import {AngularFireDatabaseModule} from "@angular/fire/database";
 
 // #fake-end#
 function appInitializer(authService: AuthService) {
@@ -48,10 +49,10 @@ function appInitializer(authService: AuthService) {
     InlineSVGModule.forRoot(),
     NgbModule,
     AngularFireModule.initializeApp(environment.firebaseKey),
-    AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularFireAuthGuardModule,
-    AngularFireStorageModule
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule
   ],
   providers: [
     {
