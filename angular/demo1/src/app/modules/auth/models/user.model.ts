@@ -109,3 +109,38 @@ export class UserModel extends AuthModel implements IUserModel{
     this.socialNetworks = user.socialNetworks;
   }
 }
+// command
+export interface IUserRegistrationRequest {
+  id: string; // id from fireAuth
+
+  username?: string;
+  password?: string;
+  fullname?: string;
+  email?: string;
+}
+export interface IUserCommandRequest {
+  id: string; // id from fireAuth
+  username?: string;
+  password?: string;
+  fullname?: string;
+  email?: string;
+  pic?: string;
+  roles?: number[] ;
+  occupation?: string;
+  companyName?: string;
+  phone?: string;
+  address?: AddressModel;
+  socialNetworks?: SocialNetworksModel;
+  // personal information
+  firstname?: string;
+  lastname?: string;
+  website?: string;
+  // account information
+  language?: string;
+  timeZone?: string;
+  communication?: {
+    email?: boolean;
+    sms?: boolean;
+    phone?: boolean;
+  };
+}

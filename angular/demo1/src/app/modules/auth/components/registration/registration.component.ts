@@ -4,7 +4,7 @@ import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
-import { UserModel } from '../../models/user.model';
+import {IUserRegistrationRequest, UserModel} from '../../models/user.model';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -93,19 +93,39 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     Object.keys(this.f).forEach((key) => {
       result[key] = this.f[key].value;
     });
-    const newUser = new UserModel();
-    newUser.setUser(result);
-    const registrationSubscr = this.authService
-      .registration(newUser)
-      .pipe(first())
-      .subscribe((user: UserModel) => {
-        if (user) {
-          this.router.navigate(['/']);
-        } else {
-          this.hasError = true;
+    this.authService.registration(this.createRegistrationRequest())
+      .subscribe({
+        next: (uid: string) => {
+          if (uid) {
+            this.router.navigate(['/']);
+          } else {
+            this.hasError = true;
+          }
         }
-      });
-    this.unsubscribe.push(registrationSubscr);
+      })
+    // const newUser = new UserModel();
+    // newUser.setUser(result);
+    // const registrationSubscr = this.authService
+    //   .registration(newUser)
+    //   .pipe(first())
+    //   .subscribe((user: UserModel) => {
+    //     if (user) {
+    //       this.router.navigate(['/']);
+    //     } else {
+    //       this.hasError = true;
+    //     }
+    //   });
+    // this.unsubscribe.push(registrationtiontrationSubscr);
+  }
+
+  createRegistrationRequest(): IUserRegistrationRequest {
+    return {
+      email: this.f.email.value,
+      fullname: this.f.fullname.value,
+      password: this.f.password.value,
+      id: '',
+      username: this.f.email.value
+    }
   }
 
   ngOnDestroy() {

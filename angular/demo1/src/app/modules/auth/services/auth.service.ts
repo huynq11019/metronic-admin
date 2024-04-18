@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject, EMPTY, Observable, of, Subscription, throwError} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable, of, Subscription} from 'rxjs';
 import {catchError, finalize, map, switchMap, take, tap} from 'rxjs/operators';
-import {IUserModel, UserModel} from '../models/user.model';
+import {IUserCommandRequest, IUserRegistrationRequest, UserModel} from '../models/user.model';
 import {AuthModel} from '../models/auth.model';
 import {AuthHTTPService} from './auth-http';
 import {environment} from 'src/environments/environment';
@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AngularFirestore} from '@angular/fire/firestore';
 import {fromPromise} from "rxjs/internal-compatibility";
+import {UserService} from "./user.service";
 
 export type UserType = UserModel | undefined;
 
@@ -40,6 +41,7 @@ export class AuthService implements OnDestroy {
     private router: Router,
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
+    private userService: UserService
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserType>(undefined);
@@ -56,19 +58,6 @@ export class AuthService implements OnDestroy {
    * @param password
    */
   login(email: string, password: string): Observable<UserType> {
-    // this.isLoadingSubject.next(true);
-    // return this.authHttpService.login(email, password).pipe(
-    //   map((auth: AuthModel) => {
-    //     const result = this.setAuthFromLocalStorage(auth);
-    //     return result;
-    //   }),
-    //   switchMap(() => this.getUserByToken()),
-    //   catchError((err) => {
-    //     console.error('err', err);
-    //     return of(undefined);
-    //   }),
-    //   finalize(() => this.isLoadingSubject.next(false))
-    // );
     return fromPromise(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
       switchMap((userCredential) => {
         if (!userCredential.user) {
@@ -98,7 +87,7 @@ export class AuthService implements OnDestroy {
   oauthPopup(provider: firebase.auth.AuthProvider): Observable<UserType> {
     return fromPromise(this.afAuth.signInWithPopup(provider))
       .pipe(switchMap((userCredential) => {
-        debugger
+          debugger
           console.log('userCredential', userCredential)
           if (!userCredential.user) {
             console.warn('userCredential fail', userCredential)
@@ -110,7 +99,7 @@ export class AuthService implements OnDestroy {
             switchMap((user) => {
 
               if (!user) {
-                const userCreate: IUserModel = {
+                const userCreate: IUserCommandRequest = {
                   id: userCredential.user?.uid ?? '',
                   username: userCredential.user?.email ?? '',
                   password: '',
@@ -131,7 +120,7 @@ export class AuthService implements OnDestroy {
                     phone: false,
                   }
                 }
-                return this.createUser(userCreate).pipe(
+                return this.userService.createUser(userCreate).pipe(
                   tap((res) => {
                       console.log('createUser', res)
                     }
@@ -201,6 +190,7 @@ export class AuthService implements OnDestroy {
         if (!user) {
           return of(undefined);
         }
+        console.log('current user id', user.uid);
         return this.afs.collection('users').doc(user.uid).get().pipe(map((user) => {
           return user.data() as UserModel;
         }))
@@ -215,19 +205,25 @@ export class AuthService implements OnDestroy {
   }
 
   // need create new user then login
-  registration(user: IUserModel): Observable<any> {
+  registration(user: IUserRegistrationRequest): Observable<string | undefined> {
     this.isLoadingSubject.next(true);
-    return this.authHttpService.createUser(user).pipe(
-      map(() => {
-        this.isLoadingSubject.next(false);
-      }),
-      switchMap(() => this.login(user.email, user.password)),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
+    return fromPromise(this.afAuth.createUserWithEmailAndPassword(user.email, user.password))
+      .pipe(switchMap((userCredential) => {
+        console.log('userCredential', userCredential);
+        user.id = userCredential.user?.uid ?? '';
+        return this.userService.registerUser(user)
+      }))
+      .pipe(
+        map(() => {
+          this.isLoadingSubject.next(false);
+        }),
+        switchMap(() => this.login(user.email, user.password)),
+        catchError((err) => {
+          console.error('err', err);
+          return of(undefined);
+        }),
+        finalize(() => this.isLoadingSubject.next(false))
+      );
   }
 
   /**
@@ -274,17 +270,17 @@ export class AuthService implements OnDestroy {
   }
 
   // create user in firestore
-  createUser(user: IUserModel): Observable<IUserModel> {
-    if (!user.id) {
-      return EMPTY;
-    }
-    return fromPromise(this.afs.collection('users').doc(user.id).set(user))
-      .pipe(map((res) => {
-        console.log('res', res)
-        return user;
-      }),
-        take(1));
-  }
+  // createUser(user: IUserModel): Observable<IUserModel> {
+  //   if (!user.id) {
+  //     return EMPTY;
+  //   }
+  //   return fromPromise(this.afs.collection('users').doc(user.id).set(user))
+  //     .pipe(map((res) => {
+  //       console.log('res', res)
+  //       return user;
+  //     }),
+  //       take(1));
+  // }
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
