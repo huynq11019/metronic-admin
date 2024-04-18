@@ -60,6 +60,7 @@ export class AuthService implements OnDestroy {
   login(email: string, password: string): Observable<UserType> {
     return fromPromise(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
       switchMap((userCredential) => {
+        console.log('userCredential', userCredential);
         if (!userCredential.user) {
           console.warn('userCredential fail', userCredential)
           return EMPTY
@@ -211,6 +212,7 @@ export class AuthService implements OnDestroy {
       .pipe(switchMap((userCredential) => {
         console.log('userCredential', userCredential);
         user.id = userCredential.user?.uid ?? '';
+        // user.language = userCredential.user
         return this.userService.registerUser(user)
       }))
       .pipe(
@@ -269,18 +271,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  // create user in firestore
-  // createUser(user: IUserModel): Observable<IUserModel> {
-  //   if (!user.id) {
-  //     return EMPTY;
-  //   }
-  //   return fromPromise(this.afs.collection('users').doc(user.id).set(user))
-  //     .pipe(map((res) => {
-  //       console.log('res', res)
-  //       return user;
-  //     }),
-  //       take(1));
-  // }
+
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());

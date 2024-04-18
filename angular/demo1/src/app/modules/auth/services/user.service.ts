@@ -33,6 +33,9 @@ export class UserService {
         ...request,
         id: CommonUtils.generateUUID()
       }
+      if (!request.pic) {
+        request.pic = './assets/media/users/default.jpg';
+      }
     }
     return fromPromise(this.afs.collection(this.COLLECTION).doc(request.id).set({
       ...request,

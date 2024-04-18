@@ -117,6 +117,10 @@ export interface IUserRegistrationRequest {
   password?: string;
   fullname?: string;
   email?: string;
+
+  pic?: string;
+  language?: string;
+  timeZone?: string;
 }
 export interface IUserCommandRequest {
   id: string; // id from fireAuth
