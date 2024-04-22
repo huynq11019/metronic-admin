@@ -28,13 +28,14 @@ export class UserService {
 
   // create user
   createUser(request: IUserCommandRequest): Observable<string> {
+
     if (!request.id) {
       request = {
         ...request,
         id: CommonUtils.generateUUID()
       }
       if (!request.pic) {
-        request.pic = './assets/media/users/default.jpg';
+        request.pic = '/assets/media/avatars/150-2.jpg';
       }
     }
     return fromPromise(this.afs.collection(this.COLLECTION).doc(request.id).set({

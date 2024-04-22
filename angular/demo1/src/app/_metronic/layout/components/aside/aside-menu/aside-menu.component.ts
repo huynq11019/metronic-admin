@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+import {Component, OnInit} from '@angular/core';
+import {environment} from '../../../../../../environments/environment';
+import {SIDEBAR_ITEMS} from "../sidebar.constants";
 
 @Component({
   selector: 'app-aside-menu',
@@ -9,8 +10,10 @@ import { environment } from '../../../../../../environments/environment';
 export class AsideMenuComponent implements OnInit {
   appAngularVersion: string = environment.appVersion;
   appPreviewChangelogUrl: string = environment.appPreviewChangelogUrl;
+  readonly SIDEBAR_ITEMS = SIDEBAR_ITEMS;
 
-  constructor() {}
 
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
 }

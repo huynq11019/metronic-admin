@@ -8,7 +8,7 @@ import {
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LayoutService } from '../../core/layout.service';
-import { environment } from './../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import {
   MenuComponent,
   DrawerComponent,
