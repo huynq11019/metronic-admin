@@ -1,6 +1,28 @@
 import { AuthModel } from './auth.model';
 import { AddressModel } from './address.model';
 import { SocialNetworksModel } from './social-networks.model';
+
+export enum RoleEnum {
+  SuperAdmin = 1,
+  Admin = 2,
+  User = 3,
+}
+export const RoleMap = {
+  [RoleEnum.SuperAdmin]: {
+    label: 'Super Admin',
+    value: RoleEnum.SuperAdmin,
+  },
+  [RoleEnum.Admin]: {
+    label: 'Admin',
+    value: RoleEnum.Admin,
+  },
+  [RoleEnum.User]: {
+    label: 'User',
+    value: RoleEnum.User,
+  },
+};
+export const RoleList = Object.values(RoleMap);
+
 export interface IUserModel {
   id: string;
   username?: string;
@@ -8,7 +30,7 @@ export interface IUserModel {
   fullname?: string;
   email?: string;
   pic?: string;
-  roles?: number[] ;
+  roles?: RoleEnum[] ;
   occupation?: string;
   companyName?: string;
   phone?: string;
@@ -21,6 +43,7 @@ export interface IUserModel {
   // account information
   language?: string;
   timeZone?: string;
+  createdAt?: Date;
   communication?: {
     email?: boolean;
     sms?: boolean;
@@ -54,7 +77,7 @@ export class UserModel extends AuthModel implements IUserModel{
   fullname?: string;
   email?: string;
   pic?: string;
-  roles?: number[] = [];
+  roles: RoleEnum [] = [];
   occupation?: string;
   companyName?: string;
   phone?: string;
@@ -125,6 +148,7 @@ export interface IUserRegistrationRequest {
 export interface IUserCommandRequest {
   id: string; // id from fireAuth
   username?: string;
+  createdAt?: Date;
   password?: string;
   fullname?: string;
   email?: string;

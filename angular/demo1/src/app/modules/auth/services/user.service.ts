@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/firestore";
 import {IUserCommandRequest, IUserModel, IUserRegistrationRequest} from "../models/user.model";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {fromPromise} from "rxjs/internal-compatibility";
 import {map, switchMap, take} from "rxjs/operators";
 import {CommonUtils} from "../../utils/common-utils";
+import {ISearchWithPaginationOptionally} from "../../shared/constants/request.constants";
+import firebase from "firebase";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,8 @@ export class UserService {
   // registration user
   registerUser(request: IUserRegistrationRequest): Observable<string> {
     const createUserRequest: IUserCommandRequest = {
-      ...request
+      ...request,
+      createdAt: new Date()
     };
     return this.createUser(createUserRequest);
   }
@@ -40,13 +43,9 @@ export class UserService {
     }
     return fromPromise(this.afs.collection(this.COLLECTION).doc(request.id).set({
       ...request,
+      createdAt: new Date()
     })).pipe(map(() => request.id
     ), take(1));
-    // return fromPromise(this.afs.collection(this.COLLECTION).add(request)).pipe(switchMap((res) => {
-    //     console.log('res', res)
-    //     return res.get();
-    //   }),
-    //   take(1))
   }
 
   // get user
@@ -61,5 +60,30 @@ export class UserService {
       switchMap(() => this.detail(id)),
       take(1)
     )
+  }
+
+  // searchUser
+  search(searchRequest: ISearchWithPaginationOptionally): Observable<IUserModel[]> {
+
+    return  this.afs.collection<IUserModel>(this.COLLECTION, ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+
+      if (searchRequest.pageSize) {
+        query = query.limit(searchRequest.pageSize);
+      }
+      query = query.orderBy('email', 'desc');
+      if (searchRequest.startAfter) {
+        query = query.startAfter(searchRequest.startAfter);
+      }
+      return query;
+    }).valueChanges()
+      .pipe(take(1));
+  }
+
+  count(searchRequest: ISearchWithPaginationOptionally): Observable<number> {
+    return this.afs.collection(this.COLLECTION, ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      return query;
+    }).get().pipe(map((snapshot) => snapshot.size), take(1));
   }
 }

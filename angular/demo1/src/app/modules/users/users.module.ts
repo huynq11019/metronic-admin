@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UserCommandComponent } from './user-command/user-command.component';
 import {RouterModule, Routes} from "@angular/router";
-import {DropdownMenusModule, WidgetsModule} from "../../_metronic/partials";
+import {DropdownMenusModule, ModalsModule, WidgetsModule} from "../../_metronic/partials";
 import {InlineSVGModule} from "ng-inline-svg";
-
 const routes: Routes = [{
   path: '',
   component: UsersListComponent,
@@ -27,7 +26,8 @@ const routes: Routes = [{
     RouterModule.forChild(routes),
     WidgetsModule,
     DropdownMenusModule,
-    InlineSVGModule
+    InlineSVGModule,
+    ModalsModule
   ]
 })
 export class UsersModule { }

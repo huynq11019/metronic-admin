@@ -12,7 +12,7 @@ export class SplashScreenService {
   /**
    * Service constructor
    *
-   * @param animationBuilder: AnimationBuilder
+   * @param animationBuilder : AnimationBuilder
    */
   constructor(private animationBuilder: AnimationBuilder) {}
 

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {UserService} from "../../auth/services/user.service";
+import {IUserModel, RoleMap} from "../../auth";
 
 @Component({
   selector: 'app-users-list',
@@ -7,9 +9,85 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersListComponent implements OnInit {
 
-  constructor() { }
+
+  /*
+     * =================   Constants   =================
+     * @description Block code for Fixed values
+     * @note: uppercase
+     */
+  protected readonly RoleMap = RoleMap;
+
+  /*
+   * =================   Logic Data   =================
+   * @description Block code for Data for logic: form, domainData,...
+   */
+  result: IUserModel[] = [];
+  /*
+   * =================   Extra Data   =================
+   * @description Block code for Data for component: data for autocomplete, search
+   */
+
+
+  /*
+   * =================   Life Cycle   =================
+   * @description Block code for Execute when load component
+   */
+  constructor(private userService: UserService,
+              private cdr: ChangeDetectorRef) {
+  }
 
   ngOnInit(): void {
+    this.onSearch()
   }
+
+  /*
+   * =================   Handler Form   =================
+   * @description Block code for Handler form: Init form, subscribe form change, ...
+   */
+
+  /*
+   * =================   Actions   =================
+   * @description Block code for Handler actions
+   * @syntax on<Name>: onCreate, onUpdate
+   */
+
+  /*
+   * =================   Router   =================
+   * @description Block code for Handler router: redirect
+   * @syntax to<Name>: toDetail, toUpdate
+   */
+
+  /*
+   * =================   PushAPI   ===================
+   * @description Block code for Execute when call API for handle change data: POST, PUT, ...
+   * @syntax <action><name>: createBuilding
+   */
+
+
+  /*
+   * =================   FetchAPI   ===================
+   * @description Block code for Execute when call API for fetch data: GET
+   * @syntax fetch<name>: fetchBuilding
+   */
+  onSearch(): void {
+    this.userService.search({
+      keyword: '',
+      pageSize: 10,
+    }).subscribe(res => {
+      console.log('xxxx', res)
+      this.result = res;
+      this.cdr.detectChanges()
+    })
+  }
+
+  onDetail(item: IUserModel): void {
+    console.log('item', item)
+
+
+  }
+  /*
+   * =================   Utils   =================
+   * @description Block code for Function support for component
+   */
 
 }
