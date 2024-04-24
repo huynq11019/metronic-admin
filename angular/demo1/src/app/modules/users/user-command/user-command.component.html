@@ -1,1 +1,23 @@
-<p>user-command works!</p>
+<!--<p>user-command works!</p>-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <mat-label>Input</mat-label>-->
+<!--  <input matInput>-->
+<!--</mat-form-field>-->
+<!--&lt;!&ndash;<mat-form-field appearance="fill">&ndash;&gt;-->
+<!--&lt;!&ndash;  <mat-label>Select</mat-label>&ndash;&gt;-->
+<!--&lt;!&ndash;  <mat-select>&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-option value="one">First option</mat-option>&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-option value="two">Second option</mat-option>&ndash;&gt;-->
+<!--&lt;!&ndash;  </mat-select>&ndash;&gt;-->
+<!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <mat-label>Textarea</mat-label>-->
+<!--  <textarea matInput></textarea>-->
+<!--</mat-form-field>-->
+<h2 mat-dialog-title>Delete all elements?</h2>
+<mat-dialog-content>This will delete all elements that are currently on this page and cannot be undone.</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <button mat-button [mat-dialog-close]="true">Delete</button>
+</mat-dialog-actions>

@@ -1,6 +1,8 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserService} from "../../auth/services/user.service";
 import {IUserModel, RoleMap} from "../../auth";
+import {MatDialog} from "@angular/material/dialog";
+import {UserCommandComponent} from "../user-command/user-command.component";
 
 @Component({
   selector: 'app-users-list',
@@ -33,6 +35,7 @@ export class UsersListComponent implements OnInit {
    * @description Block code for Execute when load component
    */
   constructor(private userService: UserService,
+              public dialog: MatDialog,
               private cdr: ChangeDetectorRef) {
   }
 
@@ -81,10 +84,17 @@ export class UsersListComponent implements OnInit {
   }
 
   onDetail(item: IUserModel): void {
-    console.log('item', item)
 
+    const dialogRef = this.dialog.open(UserCommandComponent, {
+      data: {name: 'xxx'},
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // this.animal = result;
+    });
   }
+
   /*
    * =================   Utils   =================
    * @description Block code for Function support for component

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-user-command',
@@ -7,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserCommandComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef<UserCommandComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    console.log('data', data)
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   ngOnInit(): void {
   }

@@ -5,6 +5,11 @@ import { UserCommandComponent } from './user-command/user-command.component';
 import {RouterModule, Routes} from "@angular/router";
 import {DropdownMenusModule, ModalsModule, WidgetsModule} from "../../_metronic/partials";
 import {InlineSVGModule} from "ng-inline-svg";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatOptionModule} from "@angular/material/core";
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
 const routes: Routes = [{
   path: '',
   component: UsersListComponent,
@@ -27,7 +32,15 @@ const routes: Routes = [{
     WidgetsModule,
     DropdownMenusModule,
     InlineSVGModule,
-    ModalsModule
+    ModalsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
   ]
 })
 export class UsersModule { }

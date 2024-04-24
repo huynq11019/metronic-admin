@@ -19,6 +19,8 @@ import {AngularFireAuthModule} from "@angular/fire/auth";
 import {AngularFireAuthGuardModule} from "@angular/fire/auth-guard";
 import {AngularFireStorageModule} from "@angular/fire/storage";
 import {AngularFireDatabaseModule} from "@angular/fire/database";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatCommonModule} from "@angular/material/core";
 
 // #fake-end#
 function appInitializer(authService: AuthService) {
@@ -52,7 +54,10 @@ function appInitializer(authService: AuthService) {
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+
+    MatDialogModule, // popup
+    MatCommonModule
   ],
   providers: [
     {
