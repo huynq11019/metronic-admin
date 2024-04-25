@@ -12,7 +12,15 @@ import { DeactivateAccountComponent } from './settings/forms/deactivate-account/
 import { EmailPreferencesComponent } from './settings/forms/email-preferences/email-preferences.component';
 import { NotificationsComponent } from './settings/forms/notifications/notifications.component';
 import { SignInMethodComponent } from './settings/forms/sign-in-method/sign-in-method.component';
-import { DropdownMenusModule, WidgetsModule } from '../../_metronic/partials';
+import {DropdownMenusModule, ModalsModule, WidgetsModule} from '../../_metronic/partials';
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatOptionModule} from "@angular/material/core";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
+import {ReactiveFormsModule} from "@angular/forms";
+import {UsersListComponent} from "./users-list/users-list.component";
+import {UserCommandComponent} from "./user-command/user-command.component";
 
 @NgModule({
   declarations: [
@@ -25,6 +33,8 @@ import { DropdownMenusModule, WidgetsModule } from '../../_metronic/partials';
     EmailPreferencesComponent,
     NotificationsComponent,
     SignInMethodComponent,
+    UsersListComponent,
+    UserCommandComponent
   ],
   imports: [
     CommonModule,
@@ -32,6 +42,15 @@ import { DropdownMenusModule, WidgetsModule } from '../../_metronic/partials';
     InlineSVGModule,
     DropdownMenusModule,
     WidgetsModule,
+    WidgetsModule,
+    InlineSVGModule,
+    ModalsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDialogModule,
+    MatButtonModule,
+    ReactiveFormsModule
   ],
 })
 export class AccountModule {}

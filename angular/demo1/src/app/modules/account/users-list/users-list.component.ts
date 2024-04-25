@@ -3,6 +3,7 @@ import {UserService} from "../../auth/services/user.service";
 import {IUserModel, RoleMap} from "../../auth";
 import {MatDialog} from "@angular/material/dialog";
 import {UserCommandComponent} from "../user-command/user-command.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-users-list',
@@ -36,6 +37,7 @@ export class UsersListComponent implements OnInit {
    */
   constructor(private userService: UserService,
               public dialog: MatDialog,
+              private router: Router,
               private cdr: ChangeDetectorRef) {
   }
 
@@ -84,7 +86,11 @@ export class UsersListComponent implements OnInit {
   }
 
   onDetail(item: IUserModel): void {
+this.router.navigate(['/crafted/account', item.id,'detail'])
 
+  }
+
+  createAccount(): void {
     const dialogRef = this.dialog.open(UserCommandComponent, {
       data: {name: 'xxx'},
     });

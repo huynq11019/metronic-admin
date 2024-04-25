@@ -31,15 +31,15 @@ export interface IUserModel {
   email?: string;
   pic?: string;
   roles?: RoleEnum[] ;
-  occupation?: string;
-  companyName?: string;
+  // occupation?: string;
+  // companyName?: string;
   phone?: string;
-  address?: AddressModel;
-  socialNetworks?: SocialNetworksModel;
+  // address?: AddressModel;
+  // socialNetworks?: SocialNetworksModel;
   // personal information
-  firstname?: string;
-  lastname?: string;
-  website?: string;
+  // firstname?: string;
+  // lastname?: string;
+  // website?: string;
   // account information
   language?: string;
   timeZone?: string;

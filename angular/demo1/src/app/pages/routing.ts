@@ -38,11 +38,11 @@ const Routing: Routes = [
     loadChildren: () =>
       import('../modules/apps/chat/chat.module').then((m) => m.ChatModule),
   },
-  {
-    path: 'users',
-    loadChildren: () =>
-      import('../modules/users/users.module').then((m) => m.UsersModule),
-  },
+  // {
+  //   path: 'users',
+  //   loadChildren: () =>
+  //     import('../modules/users/users.module').then((m) => m.UsersModule),
+  // },
   {
     path: '',
     redirectTo: '/dashboard',

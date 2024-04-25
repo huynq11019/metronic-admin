@@ -84,17 +84,11 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: './assets/media/icons/duotune/communication/com006.svg',
     type: 'group',
     children: [
-      // {
-      //   id: 'overview',
-      //   title: 'Overview',
-      //   type: 'basic',
-      //   routerLink: '/crafted/account/overview'
-      // },
       {
         id: 'user',
         title: 'User',
         type: 'basic',
-        routerLink: '/users'
+        routerLink: '/crafted/account'
       }
     ]
   }

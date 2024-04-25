@@ -21,6 +21,7 @@ import {AngularFireStorageModule} from "@angular/fire/storage";
 import {AngularFireDatabaseModule} from "@angular/fire/database";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatCommonModule} from "@angular/material/core";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 
 // #fake-end#
 function appInitializer(authService: AuthService) {
@@ -66,7 +67,7 @@ function appInitializer(authService: AuthService) {
       multi: true,
       deps: [AuthService],
     },
-
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'standard'}}
   ],
   bootstrap: [AppComponent],
 })
