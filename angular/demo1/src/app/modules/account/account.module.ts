@@ -21,6 +21,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {ReactiveFormsModule} from "@angular/forms";
 import {UsersListComponent} from "./users-list/users-list.component";
 import {UserCommandComponent} from "./user-command/user-command.component";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import {UserCommandComponent} from "./user-command/user-command.component";
     MatOptionModule,
     MatDialogModule,
     MatButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDividerModule,
+    MatCheckboxModule
   ],
 })
 export class AccountModule {}

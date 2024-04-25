@@ -1,83 +1,90 @@
-<!--&lt;!&ndash;<p>user-command works!</p>&ndash;&gt;-->
+<!--<p>user-command works!</p>-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <mat-label>Input</mat-label>-->
+<!--  <input matInput>-->
+<!--</mat-form-field>-->
 <!--&lt;!&ndash;<mat-form-field appearance="fill">&ndash;&gt;-->
-<!--&lt;!&ndash;  <mat-label>Input</mat-label>&ndash;&gt;-->
-<!--&lt;!&ndash;  <input matInput>&ndash;&gt;-->
+<!--&lt;!&ndash;  <mat-label>Select</mat-label>&ndash;&gt;-->
+<!--&lt;!&ndash;  <mat-select>&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-option value="one">First option</mat-option>&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-option value="two">Second option</mat-option>&ndash;&gt;-->
+<!--&lt;!&ndash;  </mat-select>&ndash;&gt;-->
 <!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<mat-form-field appearance="fill">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  <mat-label>Select</mat-label>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  <mat-select>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <mat-option value="one">First option</mat-option>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <mat-option value="two">Second option</mat-option>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;  </mat-select>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</mat-form-field>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;<mat-form-field appearance="fill">&ndash;&gt;-->
-<!--&lt;!&ndash;  <mat-label>Textarea</mat-label>&ndash;&gt;-->
-<!--&lt;!&ndash;  <textarea matInput></textarea>&ndash;&gt;-->
-<!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
-<!--<h2 mat-dialog-title>Delete all elements?</h2>-->
-<!--<mat-dialog-content>-->
-<!--  <form *ngIf="this.form" [formGroup]="this.form" class="d-grid gap-3">-->
-<!--    <div class="row">-->
-<!--      <div class="col">-->
-<!--        <mat-form-field >-->
-<!--          <mat-label>fullname</mat-label>-->
-<!--          <input matInput placeholder="Nguyen Van A" [formControlName]="USER_FIELD.fullname" >-->
-<!--          &lt;!&ndash;          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>&ndash;&gt;-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--&lt;!&ndash;    Thoong tin lien he&ndash;&gt;-->
-<!--    <div class="row">-->
-<!--      <div class="col">-->
-<!--        <mat-form-field >-->
-<!--          <mat-label>Email</mat-label>-->
-<!--          <input matInput placeholder="pat@example.com" [formControlName]="USER_FIELD.email" >-->
-<!--&lt;!&ndash;          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>&ndash;&gt;-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
-<!--      <div class="col">-->
-<!--        <mat-form-field >-->
-<!--          <mat-label>Phone number</mat-label>-->
-<!--          <input matInput placeholder="" [formControlName]="USER_FIELD.phone" >-->
-<!--          &lt;!&ndash;          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>&ndash;&gt;-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--&lt;!&ndash; time zone and language&ndash;&gt;-->
-<!--    <div class="row">-->
-<!--      <div class="col">-->
-<!--        <mat-form-field >-->
-<!--          <mat-label>Time Zone</mat-label>-->
-<!--          <mat-select [formControlName]="USER_FIELD.timeZone">-->
-<!--            <mat-option value="option">Option</mat-option>-->
-<!--          </mat-select>-->
-<!--&lt;!&ndash;          <mat-hint align="end">Here's the dropdown arrow ^</mat-hint>&ndash;&gt;-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <mat-label>Textarea</mat-label>-->
+<!--  <textarea matInput></textarea>-->
+<!--</mat-form-field>-->
+<h2 mat-dialog-title>User information</h2>
+<mat-dialog-content>
+  <form *ngIf="this.form" [formGroup]="this.form" class="d-grid gap-3">
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>fullname</mat-label>
+          <input [formControlName]="USER_FIELD.fullname" matInput placeholder="Nguyen Van A">
+          <!--          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+    <!--    Thoong tin lien he-->
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input [formControlName]="USER_FIELD.email" matInput placeholder="pat@example.com">
+          <!--          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Phone number</mat-label>
+          <input [formControlName]="USER_FIELD.phone" matInput placeholder="">
+          <!--          <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>-->
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- time zone and language-->
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Time Zone</mat-label>
+          <mat-select [formControlName]="USER_FIELD.timeZone">
+            <mat-option value="option">Option</mat-option>
+          </mat-select>
+          <!--          <mat-hint align="end">Here's the dropdown arrow ^</mat-hint>-->
+        </mat-form-field>
+      </div>
 
-<!--      <div class="col">-->
-<!--        <mat-form-field >-->
-<!--          <mat-label>Language</mat-label>-->
-<!--          <mat-select [formControlName]="USER_FIELD.language">-->
-<!--            <mat-option value="option">Option</mat-option>-->
-<!--          </mat-select>-->
-<!--&lt;!&ndash;          <mat-hint align="end">Here's the dropdown arrow ^</mat-hint>&ndash;&gt;-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
-<!--    </div>-->
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Language</mat-label>
+          <mat-select [formControlName]="USER_FIELD.language">
+            <mat-option value="option">Option</mat-option>
+          </mat-select>
+          <!--          <mat-hint align="end">Here's the dropdown arrow ^</mat-hint>-->
+        </mat-form-field>
+      </div>
+    </div>
 
-<!--&lt;!&ndash;    <div class="row">&ndash;&gt;-->
-<!--&lt;!&ndash;      <div class="col">&ndash;&gt;-->
+<!--        <div class="row">-->
+<!--          <div class="col">-->
+<!--            <mat-form-field>-->
+<!--              <mat-label>Comunicate</mat-label>-->
+<!--              <p><mat-checkbox >Email</mat-checkbox></p>-->
+<!--              <p><mat-checkbox >PhoneNumber</mat-checkbox></p>-->
+<!--            </mat-form-field>-->
+<!--          </div>-->
+<!--        </div>-->
 
-<!--&lt;!&ndash;      </div>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <mat-divider [inset]="true"></mat-divider>
+  <div class="d-flex justify-content-end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    <button (click)="this.onSubmit()" mat-button>Delete</button>
+  </div>
+</mat-dialog-actions>
 
-<!--  </form>-->
-<!--  This will delete all elements that are currently on this page and cannot be undone.</mat-dialog-content>-->
-<!--<mat-dialog-actions>-->
-<!--  <button mat-button mat-dialog-close>Cancel</button>-->
-<!--  &lt;!&ndash; The mat-dialog-close directive optionally accepts a value as a result for the dialog. &ndash;&gt;-->
-<!--  <button (click)="this.onSubmit()" mat-button >Delete</button>-->
-<!--</mat-dialog-actions>-->
-
-<!--&lt;!&ndash;[mat-dialog-close]="true"&ndash;&gt;-->
+<!--[mat-dialog-close]="true"-->

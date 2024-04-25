@@ -86,7 +86,8 @@ export class UsersListComponent implements OnInit {
   }
 
   onDetail(item: IUserModel): void {
-this.router.navigate(['/crafted/account', item.id,'detail'])
+// this.router.navigate(['/crafted/account', item.id,'detail'])
+    this.createAccount()
 
   }
 

@@ -14,7 +14,7 @@
           <span class="card-label fw-bolder fs-3 mb-1">User list</span>
           <span class="text-muted fw-bold fs-7">Total {{ this.result.length }} user</span>
         </h3>
-        <div class="card-toolbar" hidden>
+        <div class="card-toolbar gap-3">
           <!-- begin::Menu -->
           <button
             class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
@@ -28,6 +28,15 @@
         class="svg-icon svg-icon-2"
       ></span>
           </button>
+
+          <a
+            class="btn btn-sm btn-primary cursor-pointer"
+            data-bs-target="#kt_modal_create_app"
+            data-bs-toggle="modal"
+            id="kt_toolbar_primary_button"
+          >
+            Create
+          </a>
           <!-- begin::Menu 1 -->
           <app-dropdown-menu1></app-dropdown-menu1>
           <!-- end::Menu 1 -->
